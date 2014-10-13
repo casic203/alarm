@@ -1,0 +1,19 @@
+.back-img {
+	position: absolute; 
+	text-align: center;
+	 width: 93%;
+	 top: 5px;
+}
+.head-img {
+	background-image:url(../images/banner_C_img.png); 
+	background-repeat: repeat-x;
+	width:100%;
+	position:absolute;
+}
+.left-img {
+	float:left
+}
+
+.right-img {
+	float:right;
+}

@@ -1,0 +1,470 @@
+	var deviceGridColumn = [[{
+    	    field : 'devCode',
+    	    title : '编号'
+	    }, {
+		    field : 'devName',
+		    title : '设备名称'
+	    }, {
+	    	field : 'typeName',
+	    	title : '类型'
+	    }, {
+	    	field : 'longtitude',
+	    	title : '经度'
+	    }, {
+	    	field : 'latitude',
+	    	title : '纬度'
+	    }, {
+	    	field : 'height',
+	    	title : '高度'
+	    }, {
+	    	field : 'personName',
+	    	title : '负责人'
+	    }, {
+	    	field : 'factory',
+	    	title : '工厂'
+	    }, {
+	    	field : 'outDate',
+	    	title : '出厂日期'
+	    }, {
+	    	field : 'installDate',
+	    	title : '安装日期'
+	    }]];
+	
+var FeatureDisplay = function() {
+	this.successor = null;
+};
+FeatureDisplay.prototype = {
+	handleRequest : function(operType, feature) {
+		if (operType == this.featureType) {
+			this.showFeature(feature);
+		}
+		if (this.successor) {
+			this.successor.handleRequest(operType);
+		}
+	},
+	showFeature : function(feature) {
+		// this method will be overriden in the subclass
+		return false;
+	},
+	setSuccessor : function(successor) {
+		this.successor = successor;
+	}
+};
+
+// extend the featureDisplay Class
+var XtGasDisplay = function() {
+	this.featureType = "燃气智能监测终端";
+};
+extend(XtGasDisplay, FeatureDisplay)
+XtGasDisplay.prototype.showFeature = function(feature) {
+	// 打开显示设备数据弹出框
+//	xtGasDisplayDlgIndex = $.layer({
+//		type : 3,
+//		offset : [ '110px', '' ],
+//		shade : [ '', '', false ],
+//		area : [ 'auto', 'auto' ],
+//		page : {
+//			dom : '#xtGasDisplayDlg'
+//		},
+//		close : function(index) {
+//			if (intervalId != null) {
+//				clearInterval(intervalId);
+//				intervalId = null;
+//				parent.layer.close(xtGasDisplayDlgIndex);
+//			}
+//		}
+//	});
+	$("#currentFeatureName").val(feature.Name);
+//	alert("11:" + currentFeatureName);
+	
+	xtGasDisplayDlgIndex = $.layer({
+		type : 2,
+		title:'燃气智能监测终端设备信息',
+		offset : [ '20px', '' ],				
+		area : [ "900px","600px" ],
+		iframe:{src:'common/layout/xtGasDisplayDlg.jsp'}
+	});
+	
+
+//	////////////////////////
+//	//显示设备信息
+//	$("#xtGasDeviceInfoTbl").datagrid({
+//		columns : deviceGridColumn,
+//		url:encodeURI("alarm/xt-gas-display!getDeviceProps.do?model.devCode=" + feature.Name + "&time=" + new Date())
+//	});
+//	
+//	//显示燃气进站、出站压力、电量
+//	$("#inPressure").html("");
+//	$("#outPressure").html("");
+//	$("#power").html("");
+//	var inPressureGage = new JustGage({
+//        id: "inPressure", 
+//        value: 0, 
+//        min: 0,
+//        max: 1000,
+//        title: "燃气进站压力",
+//        label: "",  
+//        startAnimationTime: 2000,
+//        startAnimationType: ">",
+//        refreshAnimationTime: 1000,
+//        refreshAnimationType: "bounce"  
+//	});
+//	var outPressureGage = new JustGage({
+//        id: "outPressure", 
+//        value: 0, 
+//        min: 0,
+//        max: 1000,
+//        title: "燃气出站压力",
+//        label: "",  
+//        startAnimationTime: 2000,
+//        startAnimationType: ">",
+//        refreshAnimationTime: 1000,
+//        refreshAnimationType: "bounce"  
+//	});
+//	var powerGage = new JustGage({
+//        id: "power", 
+//        value: 0, 
+//        min: 0,
+//        max: 1000,
+//        title: "电量",
+//        label: "",  
+//        startAnimationTime: 2000,
+//        startAnimationType: ">",
+//        refreshAnimationTime: 1000,
+//        refreshAnimationType: "bounce"  
+//	});
+//	var second = 5;
+//	intervalId = setInterval(function() {
+//		if(second != 0) {
+//			$("#xtGasCountDown").html(second + "秒");
+//			second --;
+//			return;
+//		} else {
+//			$("#xtGasCountDown").html(second + "秒");
+//			second = 5;
+//		    $.ajax({
+//			      url:"alarm/xt-gas-display!getDeviceRealtimeData.do",
+//			      type : "POST",
+//			      data: {
+//			    	  'model.devCode':feature.Name
+//			      },
+//			      success : function(data) {
+//				      var dataContent = eval('(' + data + ')');
+//				      var inPress = dataContent.inPress;
+//				      var outPress = dataContent.outPress;
+//				      var cell = dataContent.cell;
+//				      if(typeof(inPress) != 'undefined' && inPress != null) {
+//					      inPressureGage.refresh(inPress);   
+//				      }
+//				      if(typeof(outPress) != 'undefined' && outPress != null) {
+//					      outPressureGage.refresh(outPress);   
+//				      }
+//				      if(typeof(cell) != 'undefined' && cell != null) {
+//					      powerGage.refresh(cell);   
+//				      }
+//			  }
+//		    });
+//		}
+//		
+//	}, 1000);
+//	
+//	//显示燃气浓度历史曲线
+//	$.ajax({
+//		  url:"alarm/xt-gas-display!getStrengthHistoryData.do",
+//		  type : "POST",
+//	      data: {
+//	    	  'model.devCode':feature.Name
+//	      },
+//	      success : function(data) {
+//	    	  var data = eval('(' + data + ')');
+//	    	  var dataArray = [];
+//	    	  var labelArray = ['燃气浓度历史曲线'];
+//	    	  for(var i = 0;i < data.length; i ++) {
+//	    		  var uptime = data[i].uptime;
+//	    		  var strength = data[i].strength;
+//	    		  dataArray.push([uptime, strength]);
+//	    	  }
+//	    	  
+//	    	  $("#gasDensityRecord").html("");
+//			  var jqplot = $.jqplot('gasDensityRecord', [dataArray], {
+//					title:'燃气浓度历史曲线',
+//					series:[{
+//						lineWidth:2,
+//						markerOptions:{
+//							style:'dimaon'
+//						}
+//					}],
+//					axesDefaults:{
+//						tickRenderer:$.jqplot.CanvasAxisTickRenderer,
+//					    tickOptions:{
+//						    angle:-30,
+//						    fontSize:'10pt'
+//					    }
+//				    },
+//					axes : {
+//						xaxis : {
+//							renderer : $.jqplot.CategoryAxisRenderer
+//						}
+//					},
+//					legend:{
+//						show:true,
+//						location:'e',
+//						labels:labelArray
+//					}
+//				});
+//	      }
+//	});
+//	/////////////////////////
+};
+
+// extend the featureDisplay Class
+var SzWSGasDisplay = function() {
+	this.featureType = "污水有害气体监测仪";
+};
+extend(SzWSGasDisplay, FeatureDisplay)
+SzWSGasDisplay.prototype.showFeature = function(feature) {
+	// TODO: display the gas device info from shen zheng Company
+};
+
+// extend the featureDisplay Class
+var FiberDisplay = function() {
+	this.featureType = "光纤";
+};
+extend(FiberDisplay, FeatureDisplay)
+FiberDisplay.prototype.showFeature = function(feature) {
+	//打开显示设备数据弹出框
+	viewSensorDataDlgIndex = $.layer({
+		type : 1,
+		offset : [ '110px', '' ],
+		shade : [ '', '', false ],
+		area : [ 'auto', 'auto' ],
+		page : {
+			dom : '#fiberDisplayDlg'
+		},
+		close:function(index) {
+			 if(intervalId != null) {
+		         clearInterval(intervalId);
+				 intervalId = null;
+				 parent.layer.close(viewSensorDataDlgIndex);
+			     }
+		}
+	});
+	
+	//显示光纤设备信息
+	$("#fiberInfoTbl").datagrid({
+		columns : deviceGridColumn,
+		url:encodeURI("alarm/nk-gx-curve!getDeviceProps.do?model.devCode=" + feature.Name + "&time=" + new Date())
+	});
+	
+	//光纤最新曲线（压力,温度,振动）
+	$.ajax({
+		  url:"alarm/nk-gx-curve!getDeviceRealtimeData.do",
+		  type : "POST",
+	      data: {
+	    	  'model.devCode':feature.Name
+	      },
+	      success:function(data) {
+	    	  try {
+	    	      var data = eval('(' + data + ')');
+	    	      var stressItemList = data.stressItemList;
+	    	      var temperatureItemList = data.temperatureItemList;
+	    	      var vibratingItemList = data.vibratingItemList;
+	    	      
+	    	      var labelArray = [];
+	    	      var dataArray = [];
+	    	      var pressDataArray = [];
+	    	      var temperatureDataArray = [];
+	    	      var vibratingDataArray = [];
+	    	      labelArray = ['压力', '温度', '振动'];
+	    	      for(var i = 0;i < stressItemList.length;i ++) {
+	    	    	  var uptime = stressItemList[i].uptime;
+	    	    	  var data = stressItemList[i].data;
+	    	    	  pressDataArray.push([uptime, data]);
+	    	      }
+	    	      for(var i = 0;i < temperatureItemList.length;i ++) {
+	    	    	  var uptime = temperatureItemList[i].uptime;
+	    	    	  var data = temperatureItemList[i].data;
+	    	    	  temperatureDataArray.push([uptime, data]);
+	    	      }
+	    	      for(var i = 0;i < vibratingItemList.length;i ++) {
+	    	    	  var uptime = vibratingItemList[i].uptime;
+	    	    	  var data = vibratingItemList[i].data;
+	    	    	  vibratingDataArray.push([uptime, data]);
+	    	      }
+	    	      dataArray = [pressDataArray, temperatureDataArray, vibratingDataArray];
+	    	      
+		    	  $("#fiberRecord").html("");
+				  var jqplot = $.jqplot('fiberRecord', dataArray, {
+						title:'光纤最新曲线（压力,温度,振动)',
+						series:[{
+							lineWidth:2,
+							markerOptions:{
+								style:'dimaon'
+							}
+						}],
+						axesDefaults:{
+							tickRenderer:$.jqplot.CanvasAxisTickRenderer,
+						    tickOptions:{
+							    angle:-30,
+							    fontSize:'10pt'
+						    }
+					    },
+						axes : {
+							xaxis : {
+								renderer : $.jqplot.CategoryAxisRenderer
+							}
+						},
+						legend:{
+							show:true,
+							location:'e',
+							labels:labelArray
+						}
+					});
+	    	  } catch(e) {}
+	      }
+	});
+};
+
+// extend the featureDisplay Class
+var AdLiquidLevelDisplay = function() {
+	this.featureType = "液位监测仪";
+};
+extend(AdLiquidLevelDisplay, FeatureDisplay)
+AdLiquidLevelDisplay.prototype.showFeature = function(feature) {
+	//打开显示设备数据弹出框
+	viewSensorDataDlgIndex = $.layer({
+		type : 1,
+		offset : [ '110px', '' ],
+		shade : [ '', '', false ],
+		area : [ 'auto', 'auto' ],
+		page : {
+			dom : '#adLiquidLevelDisplayDlg'
+		},
+		close:function(index) {
+			 if(intervalId != null) {
+		         clearInterval(intervalId);
+				 intervalId = null;
+				 parent.layer.close(viewSensorDataDlgIndex);
+			     }
+		}
+	});
+	
+	//显示光纤设备信息
+	$("#adLiquidLevelDeviceInfoTbl").datagrid({
+		columns : deviceGridColumn,
+		url:encodeURI("alarm/ad-dj-liquid!getDeviceProps.do?model.devCode=" + feature.Name + "&time=" + new Date())
+	});
+	
+	//显示电池电量
+	var liquidCellGage = new JustGage({
+        id: "liquidCell", 
+        value: 0, 
+        min: 0,
+        max: 1000,
+        title: "电量",
+        label: "",  
+        startAnimationTime: 2000,
+        startAnimationType: ">",
+        refreshAnimationTime: 1000,
+        refreshAnimationType: "bounce"  
+	});
+	var second = 5;
+	intervalId = setInterval(function() {
+		if(second != 0) {
+			$("#liquidCountDown").html(second + "秒");
+			second --;
+			return;
+		} else {
+			$("#liquidCountDown").html(second + "秒");
+			second = 5;
+		    $.ajax({
+			      url:"alarm/ad-dj-liquid!getDeviceCell.do",
+			      type : "POST",
+			      data: {
+			    	  'model.devCode':feature.Name
+			      },
+			      success : function(data) {
+				      var dataContent = eval('(' + data + ')');
+				      var cell = dataContent.cell;
+				      if(typeof(cell) != 'undefined' && cell != null) {
+				    	  liquidCellGage.refresh(cell);   
+				      }
+			  }
+		    });
+		}
+		
+	}, 1000);
+	
+	
+	//显示液位曲线
+	$.ajax({
+		  url:"alarm/ad-dj-liquid!getLiquidHistoryData.do",
+		  type : "POST",
+	      data: {
+	    	  'model.devCode':feature.Name
+	      },
+	      success:function(data) {
+	    	  var data = eval('(' + data + ')');
+	    	  var label = ['液位数据'];
+	    		  
+			  $("#adLiquidLevelRecord").html("");
+			  var jqplot = $.jqplot('adLiquidLevelRecord', data, {
+					title:'液位曲线',
+					series:[{
+						lineWidth:2,
+						markerOptions:{
+							style:'dimaon'
+						}
+					}],
+					axesDefaults:{
+						tickRenderer:$.jqplot.CanvasAxisTickRenderer,
+					    tickOptions:{
+						    angle:-30,
+						    fontSize:'10pt'
+					    }
+				    },
+					axes : {
+						xaxis : {
+							renderer : $.jqplot.CategoryAxisRenderer
+						}
+					},
+					legend:{
+						show:true,
+						location:'e',
+						labels:label
+					}
+				});
+	      }
+	});
+};
+
+// extend the featureDisplay Class
+var AdSLDeviceDisplay = function() {
+	this.featureType = "渗漏预警仪";
+};
+extend(AdSLDeviceDisplay, FeatureDisplay)
+AdSLDeviceDisplay.prototype.showFeature = function(feature) {
+	// TODO: display SL device info from adler Company
+};
+
+// extend the featureDisplay Class
+var AdDSDeviceDisplay = function() {
+	this.featureType = "多功能漏损监测仪";
+};
+extend(AdDSDeviceDisplay, FeatureDisplay)
+AdDSDeviceDisplay.prototype.showFeature = function(feature) {
+	// TODO: display multi function device info from adler Company
+};
+
+function extend(subClass, superClass) {
+	var F = function() {
+	};
+	F.prototype = superClass.prototype;
+	subClass.prototype = new F();
+	subClass.prototype.constructor = subClass;
+
+	subClass.superClass = superClass.prototype;
+	if (subClass.prototype.constructor == Object.prototype.constructor) {
+		superClass.prototype.constructor = superClass;
+	}
+}

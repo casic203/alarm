@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="compositeFilter" class="com.casic.core.servlet.CompositeFilter">
+		<property name="filters">
+			<list>
+				<ref bean="characterEncodingFilter"/>
+				<ref bean="acceptLanguageHeaderFilter"/>
+				<ref bean="perf4jFilter"/>
+				<ref bean="openSessionInViewFilter"/>
+				<ref bean="auditTrailFilter"/>
+				<ref bean="strutsFilter"/>
+				<ref bean="servletFilter"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="characterEncodingFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="encode"/>
+		<property name="filter">
+			<bean class="org.springframework.web.filter.CharacterEncodingFilter">
+				<property name="encoding" value="UTF-8"/>
+				<property name="forceEncoding" value="true"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="acceptLanguageHeaderFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="i18n"/>
+		<property name="filter">
+			<bean class="com.casic.core.i18n.AcceptLanguageHeaderFilter"/>
+		</property>
+	</bean>
+
+	<bean id="perf4jFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="perf4j"/>
+		<property name="filter">
+			<bean class="com.casic.core.perf4j.Perf4jFilter"/>
+		</property>
+		<property name="enable" value="${filter.perf4j.enable}"/>
+	</bean>
+
+	<bean id="openSessionInViewFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="hibernate"/>
+		<property name="filter">
+			<bean class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter"/>
+		</property>
+	</bean>
+
+	<bean id="auditTrailFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="inspektr"/>
+		<property name="filter">
+			<bean class="com.github.inspektr.common.web.ClientInfoThreadLocalFilter"/>
+		</property>
+		<property name="enable" value="${filter.inspektr.enable}"/>
+	</bean>
+
+	<bean id="strutsFilter" class="com.casic.core.servlet.ProxyFilter">
+		<property name="name" value="struts"/>
+		<property name="filter">
+			<bean class="org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter"/>
+		</property>
+		<property name="urlPattern" value="/*"/>
+	</bean>
+
+	<bean id="servletFilter" class="com.casic.core.servlet.ServletFilter">
+		<property name="name" value="servlet"/>
+		<property name="servletMap">
+			<map>
+				<entry key="/jolokia/*">
+					<ref bean="jolokia"/>
+				</entry>
+				<entry key="/perf4j">
+					<ref bean="perf4j"/>
+				</entry>
+				<!--
+				<entry key="/rs/*">
+					<ref bean="jersey"/>
+				</entry>
+				-->
+			</map>
+		</property>
+	</bean>
+
+	<bean id="jolokia" class="com.casic.core.servlet.ProxyServlet">
+		<constructor-arg index="0" value="jolokia"/>
+		<constructor-arg index="1">
+			<bean class="org.jolokia.http.AgentServlet"/>
+		</constructor-arg>
+		<constructor-arg index="2" value="${servlet.jolokia.enable}"/>
+	</bean>
+
+	<bean id="perf4j" class="com.casic.core.servlet.ProxyServlet">
+		<constructor-arg index="0" value="perf4j"/>
+		<constructor-arg index="1">
+			<bean class="org.perf4j.logback.servlet.GraphingServlet"/>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<map>
+				<entry key="graphNames">
+					<value>graphExecutionTimes,graphExecutionTPS</value>
+				</entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg index="3" value="${servlet.perf4j.enable}"/>
+	</bean>
+	
+<!--  
+	<bean id="jersey" class="com.casic.core.servlet.ProxyServlet">
+		<constructor-arg index="0" value="jersey"/>
+		<constructor-arg index="1">
+			<bean class="com.sun.jersey.spi.spring.container.servlet.SpringServlet"/>
+		</constructor-arg>
+	</bean>
+-->
+</beans>

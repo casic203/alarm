@@ -1,0 +1,28 @@
+<script type="text/javascript" src="s/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+/*
+		$.ajax({
+			url: 'rs/authority/resource?appId=0',
+			success: function(data) {
+				var html = '';
+				for (var i = 0; i < data.length; i++) {
+					html += '<p>' + data[i].access + ' ' + data[i].permission + '</p>';
+				}
+				$('#resource').html(html);
+			}
+		});
+*/
+		$.ajax({
+			url: 'rs/authority/user?userId=1&appId=0',
+			success: function(data) {
+				var html = '';
+				html += '<p>' + data.username + '</p>';
+				html += '<p>' + data.authorities + '</p>';
+				$('#resource').html(html);
+			}
+		});
+    });
+</script>
+
+<div id="resource">loading...</div>

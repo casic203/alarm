@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+.fm{
+	margin: 0;
+	padding: 10px 30px;
+}
+.ftitle{
+	font-size: 14px;
+	font-weight: bold;
+	color: #666;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #ccc;
+}
+.fitem{
+	padding-bottom: 5px;
+}
+.fitem label{
+	font-size: 12px;
+	display: inline-block;
+	width: 80px;
+}

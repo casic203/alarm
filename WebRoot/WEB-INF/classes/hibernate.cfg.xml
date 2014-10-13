@@ -1,0 +1,22 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+    <session-factory>
+  		<!-- alarm begin -->
+  		<mapping class="com.casic.alarm.domain.AcceptPerson"/>
+  		<mapping class="com.casic.alarm.domain.AlarmRecord"/>
+  		<mapping class="com.casic.alarm.domain.AlarmType"/>
+  		<mapping class="com.casic.alarm.domain.ContactBook"/>
+  		<mapping class="com.casic.alarm.domain.Device"/>
+  		<mapping class="com.casic.alarm.domain.DeviceType"/>
+  		<mapping class="com.casic.alarm.domain.Region"/>
+  		<mapping class="com.casic.alarm.domain.SensorFlowRecord"/>
+  		<mapping class="com.casic.alarm.domain.SensorGasRecord"/>
+  		<mapping class="com.casic.alarm.domain.SensorNoiseRecord"/>
+  		<mapping class="com.casic.alarm.domain.SensorNoiseRecordV2"/>
+  		<mapping class="com.casic.alarm.domain.SensorPressRecord"/>
+  		<!-- alarm end -->
+    </session-factory> 
+</hibernate-configuration>

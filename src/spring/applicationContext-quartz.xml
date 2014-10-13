@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="mailMessage" class="com.casic.alarm.utils.MailMessage"/>
+	<bean id="smsMessage" class="com.casic.alarm.utils.SmsMessage"/>
+	
+	<bean id="systemJob" class="com.casic.alarm.scheduler.SystemJob">
+	    <property name="messageServiceMap">
+	        <map>
+	            <entry>
+	                <key><value>sms</value></key>
+	                <ref bean="smsMessage"/>
+	            </entry>
+	            <entry>
+	                <key><value>email</value></key>
+	                <ref bean="mailMessage"/>
+	            </entry>
+	        </map>
+	    </property>
+	</bean>
+	<bean id="mailJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="systemJob" />
+		<property name="targetMethod" value="autoSendMail" />
+	</bean>
+	
+	<bean id="mailCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="mailJobDetail" />
+		<property name="cronExpression" value="0/60 * * * * ?" />
+	</bean>
+	
+	<!-- 
+	<bean id="testJob" class="com.casic.alarm.scheduler.DemoJob"/>
+    <bean id="testCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="testJob" />
+		<property name="cronExpression" value="0/10 * * * * ?" />
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="autoStartup" value="${quartz.autostartup}"/>
+		<property name="quartzProperties" ref="applicationProperties"/>
+		<property name="triggers">
+			<list>
+				<ref bean="testJob" />
+			</list>
+		</property>
+	</bean>
+	-->
+	
+		<!-- job defination push to the platform -->
+	<bean id="warnInfoPushJob" class="com.casic.alarm.scheduler.WarnInfoPushJob"></bean>
+	<bean id="warnPushJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="warnInfoPushJob" />
+		<property name="targetMethod" value="auotExexcute" />
+	</bean>
+	<bean id="warnInfoCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="warnPushJobDetail" />
+		<property name="cronExpression" value="0/10 * * * * ?" />
+	</bean>
+	
+	<!-- add trigger list -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="autoStartup" value="${quartz.autostartup}"/>
+		<property name="quartzProperties" ref="applicationProperties"/>
+		<property name="triggers">
+			<list>
+				<!--<ref bean="mailCronTrigger" /> -->
+				<ref bean="warnInfoCronTrigger"/>
+			</list>
+		</property>
+	</bean>
+
+</beans>

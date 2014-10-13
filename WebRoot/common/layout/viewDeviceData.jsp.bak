@@ -1,0 +1,157 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<!-- 旧有的device
+<div id="viewDeviceDataDlg" style="z-index:1;display:none;">
+		<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="deviceRealTimeTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="justGage" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="countdown"></span></label>
+					<div id="flowJustGage" style="width:150px; height:100px; "></div>
+					<div id="pressJustGage" style="width:150px; height:100px;"></div>
+					<div id="noiseJustGage" style="width:150px; height:100px;"></div>
+				</div>
+				<div id="historyDataJqplot" style="width:690px;height:360px;"></div>
+			</div>
+		</div>
+</div>
+-->
+<div id="deviceDisplayDlg" style="display:none">
+<!--燃气智能智能监测终端-->
+<div id="xtGasDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="xtGasDeviceInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="xtGasRealTimeData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="xtGasCountDown"></span></label>
+					<!--显示燃气进站、出站压力、电量-->
+					<div id="inPressure" style="width:150px; height:100px; "></div>
+					<div id="outPressure" style="width:150px; height:100px;"></div>
+					<div id="power" style="width:150px; height:100px;"></div>
+				</div>
+					<!--燃气浓度历史曲线-->
+				<div id="gasDensityRecord" style="width:690px;height:360px;"></div>
+			</div>
+		</div>
+</div>
+
+<!--污水有害气体-->
+<div id="szWSGasDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="szWSGasDeviceInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="szWSGasHistoryData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="countdown"></span></label>
+					<!--污水有害气体历史曲线（氧气、CO,H2S,可燃气体）-->
+				<div id="szWSGasRecord" style="width:690px;height:360px;"></div>
+				</div>
+			</div>
+	</div>
+</div>
+
+<!--光纤-->
+<div id="fiberDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="fiberInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="fiberHistoryData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="countdown"></span></label>
+					<!--光纤最新曲线（扰动、温度,应力）-->
+				<div id="fiberRecord" style="width:690px;height:360px;"></div>
+				</div>
+			</div>
+	</div>
+</div>
+
+<!--液位监测仪-->
+<div id="adLiquidLevelDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="adLiquidLevelDeviceInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="adLiquidLevelRealTimeData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="liquidCountDown"></span></label>
+					<!--电池电量-->
+				    <div id="liquidCell" style="width:690px;height:360px;"></div>
+				</div>
+					<!--液位曲线-->
+				<div id="adLiquidLevelRecord" style="width:690px;height:360px;"></div>
+			</div>
+	</div>
+</div>
+
+<!--渗漏预警仪-->
+<div id="adSLDeviceDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="adSLDeviceInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="adSLRealTimeData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="countdown"></span></label>
+					<!--电池电量-->
+				<div id="cell" style="width:690px;height:360px;"></div>
+				</div>
+					<!--噪声曲线-->
+				<div id="adSLNoiseRecord" style="width:690px;height:360px;"></div>
+			</div>
+	</div>
+</div>
+
+<!--多功能漏损监测仪-->
+<div id="adDSDeviceDisplayDlg" style="z-index:1;display:none;">
+	<div title=""
+			style="width:890px;min-height:480px;height:auto;padding:10px;background:#fafafa;"
+			data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+			<div>
+				<table id="adDSDeviceInfoTbl" class="easyui-datagrid">
+				</table>
+			</div>
+			<div style="margin-top:25px">
+				<div id="adDSDeviceRealTimeData" style="float:left; ">
+					<label style="font-size:12px;">距离刷新时间还剩：<span
+						id="countdown"></span></label>
+					<!--电池电量-->
+				<div id="cell" style="width:690px;height:360px;"></div>
+				</div>
+					<!--噪声曲线、流量曲线、压力曲线-->
+				<div id="adDSDeviceRecord" style="width:690px;height:360px;"></div>
+			</div>
+	</div>
+</div>
+</div>
+
+
+

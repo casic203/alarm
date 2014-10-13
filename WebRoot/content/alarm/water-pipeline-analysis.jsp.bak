@@ -1,0 +1,358 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+  String path = request.getContextPath();
+  String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    <title></title>
+    <%-- 
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	--%>
+	<script src="/s/jquery-easyui-1.3.2/jquery-1.8.0.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+  
+	<div id="cc" class="easyui-layout" data-options="border:false, collapsible:false, fit:true">
+		<div data-options="region:'north',split:true, border:false" style="height:50px; background:#eee; line-height: 50px;">
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="beginCreateRegion()">创建分区</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-no'" onclick="beginDeleteRegion()">删除分区</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-redo'" onclick="beginModifyRegion()">修改分区</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-redo'">DMA分区地图查看</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="popRegionQueryDialog()">分区查询</a>
+		</div>
+		<div data-options="region:'south',title:'South Title',split:true" style="height:50px;">
+		</div>
+		<div data-options="region:'west',split:true" style="width:250px; ">
+			<table id="regionTbl" class="easyui-treegrid" style="display:none" data-options="iconCls:'icon-ok',
+    		animate:true,
+    		collapsible:true,
+    		treeField:'regionName',
+    		fit:true,
+    		url:'alarm/water-pipeline-analysis!queryRegion.do',
+    		idField:'id',
+    		onClickRow:function(row){clickRowCallback(row)}">
+				<thead>
+					<tr>
+						<th data-options="field:'regionName',width:180">分区名</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div data-options="region:'center'" style="padding:5px;">
+		     <table id="deviceTbl" class="easyui-datagrid" style="display:none">
+				<thead>
+					<tr>
+						<th data-options="field:'devCode', width:100">设备号</th>
+						<th data-options="field:'typeName', width:100">设备类型</th>
+						<th data-options="field:'devName', width:100">设备名</th>
+						<th data-options="field:'factory', width:100">设备厂商</th>
+						<th data-options="field:'installDate', width:100">安装日期</th>
+						<th data-options="field:'outDate', width:100">失效日期</th>
+						<th data-options="field:'personName', width:100">负责人</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	
+	<%-- 创建分区Dialog --%>
+    <div id="createRegionDlg" style="z-index:1;display:none;">
+        <form id="ff" method="post">
+        <div id="p" title="" style="width:290px;min-height:400px;height:auto;padding:10px;background:#fafafa;" data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+            <p style="margin-top:10px; margin-left:10px;">
+                                          分区名：<input class="easyui-validatebox" type="text" id="regionName" name="model.regionName" data-options="required:true"/>
+            </p>
+            <p style="margin-top:10px; margin-left:10px;">
+                                          选择父区：<label id="choiceName"></label>&nbsp;&nbsp;<button onclick="choiceParentRegion()">选择</button>
+            </p>
+            <p style="margin-top:10px; margin-left:10px;">
+                                          分区的经纬度集合：<input class="easyui-validatebox" type="text" id="regionArea" name="model.regionArea" data-options="required:true"/>
+            </p>
+            <p style="margin-top:10px; margin-left:10px;">
+                                           选择设备：
+			</p>
+			<p style="margin-top:10px; margin-left:10px;">
+			    <table id="choiceDeviceTbl" class="easyui-datagrid" data-options="singleSelect:false">
+	                <thead>
+					    <tr>
+						    <th data-options="field:'devName',width:180">设备名</th>
+					    </tr>
+				    </thead>
+	            </table>
+			</p>
+            <p style="margin-top:10px; margin-left:10px; text-align:right">
+                <button onclick="confirmCreateOrUpdateRegion()"><label id="labelBtn">创建<label></button>
+            </p>
+            <input type="hidden" id="parentRegionId" name="model._parentRegionId"/>
+            <input type="hidden" id="deviceIds" name="model.deviceIds"/>
+            <input type="hidden" id="optType" value="0"/> <%--0:创建分区 1:修改分区 --%>
+            <input type="hidden" id="regionId" name="regionId"/> <%-- 分区ID(用于修改分区信息) --%>
+        </div>
+        </form>
+    </div>
+	
+	<%-- 选择父分区Dialog --%>
+	<div id="choiceParentRegionDlg" style="z-index:1;display:none;">
+	    <div title="" style="width:290px;min-height:400px;height:auto;padding:10px;background:#fafafa;" data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+	        <table id="choiceParentRegionTbl" class="easyui-datagrid" data-options="singleSelect:true, idField:'id'">
+	            <thead>
+					<tr>
+						<th data-options="field:'regionName',width:180">分区名</th>
+					</tr>
+				</thead>
+	        </table>
+	        <button onclick="confirmChoicePRegion()">选择</button>
+	    </div>
+	</div>
+	
+	<%-- 分区查询Dialog --%>
+	<div id="queryRegionDlg" style="z-index:1;display:none;">
+	    <div title="" style="width:290px;min-height:50px;height:auto;padding:10px;background:#fafafa;" data-options="iconCls:'icon-search', closable:false, collapsible:true,minimizable:true,maximizable:true">
+	                     分区名:<input name="queryRegionName" id="queryRegionName"/>
+	         &nbsp;&nbsp;
+	        <button onclick="queryRegion()">查询</button>
+	    </div>
+	</div>
+</body>
+<script type="text/javascript">
+    var regionDlgIndex = null;
+    var choiceParentRegionIndex = null;
+    var choiceDeviceIndex = null;
+    var queryRegionDlgIndex = null;
+    
+    /*
+    $("#regionTbl").treegrid({
+    	    iconCls:'icon-ok',
+    		animate:true,
+    		collapsible:true,
+    		treeField:'regionName',
+    		fit:true,
+    		url:'alarm/water-pipeline-analysis!queryRegion.do',
+    		idField:'id',
+        	onClickRow:function(row) {
+        	    $("#deviceTbl").datagrid({url:"alarm/water-pipeline-analysis!queryDevicesByRegionId.do?model.regionId=" + row.id});
+        	}
+     });
+    */
+    //alert('water-pipeline');
+
+    function clickRowCallback(row) {
+    	$("#deviceTbl").datagrid({url:"alarm/water-pipeline-analysis!queryDevicesByRegionId.do?model.regionId=" + row.id});
+    }
+	
+    /**
+     * 开始选择分区
+     */
+	function beginCreateRegion() {
+		$("#optType").val(0);
+		$("#labelBtn").html("创建");
+		regionDlgIndex = $.layer({
+			type : 1,
+			offset : [ '100px', '' ],
+			shade : [ '', '', false ],
+			area : [ 'auto', 'auto' ],
+			page : {
+				dom : '#createRegionDlg'
+			}
+		});
+		$("#regionName").val('');
+		$("#regionArea").val('');
+		$("#parentRegionId").val('');
+		$("#choiceName").html('');
+		$("#regionId").val('');		
+		$("#choiceDeviceTbl").datagrid({url:"alarm/water-pipeline-analysis!queryNoRegionDevice.do"});
+	}
+	
+    /**
+     *  弹出选择父分区对话框
+     **/
+	function choiceParentRegion() {
+		choiceParentRegionIndex = $.layer({
+			type : 1,
+			offset : [ '100px', '' ],
+			shade : [ '', '', false ],
+			area : [ 'auto', 'auto' ],
+			page : {
+				dom : '#choiceParentRegionDlg'
+			}
+		});
+		$("#choiceParentRegionTbl").datagrid({url:"alarm/water-pipeline-analysis!queryRegion.do"});
+	}
+	
+    /**
+     *
+     *确认选择父分区 
+     **/
+	function confirmChoicePRegion() {
+		var selectedRow = $("#choiceParentRegionTbl").datagrid("getSelected");
+		$("#parentRegionId").val(selectedRow.id);
+		$("#choiceName").html(selectedRow.regionName);
+		parent.layer.close(choiceParentRegionIndex);
+	}
+    
+   /**
+    *
+    * 确认创建分区
+    **/
+	function confirmCreateOrUpdateRegion() {
+    	var submitUrl = null;
+    	var optType = $("#optType").val();
+    	if(optType == 0) {
+    		submitUrl = "alarm/water-pipeline-analysis!createRegion.do";
+    	} else if(optType == 1) {
+    		submitUrl = "alarm/water-pipeline-analysis!confirmModifyRegion.do?model.regionId=";
+    	}
+    	
+    	var devices = $("#choiceDeviceTbl").datagrid("getSelections");
+    	var deviceIds = "";
+    	for(var i = 0;i < devices.length; i ++) {
+    		deviceIds += (devices[i].id + "-");
+    	}
+    	deviceIds = deviceIds.substring(0, deviceIds.length - 1);
+    	$("#deviceIds").val(deviceIds);
+    	
+		$.messager.progress();	// display the progress bar
+		$('#ff').form({   
+			url:submitUrl,    
+			onSubmit: function(){        
+				    var isValid = $(this).form('validate');// do some check        
+ 				    if (!isValid){
+					    $.messager.progress('close');	// hide progress bar while the form is invalid
+				    }
+				    return isValid;	// return false will stop the form submission
+			},    
+			success:function(data){    
+				var data=eval("("+data+")");
+				$.messager.progress('close');	// hide progress bar while the form is invalid
+				if(data.success) {
+					$("#regionTbl").treegrid("reload");
+					$.messager.show({
+						title:'提示',
+						msg:data.msg,
+						timeout:5000
+				    });
+					parent.layer.close(regionDlgIndex);
+				}
+			}
+		}); 
+		$('#ff').submit();
+	}
+	
+   /**
+    *
+    * 删除选择的分区
+    **/
+    function beginDeleteRegion() {
+    	$.messager.progress();	// display the progress bar
+	    var selected = $("#regionTbl").treegrid("getSelected");
+	    if(selected != null) {
+	        //alert("selected.id: " + selected.id);
+	        $.ajax({
+	        	type:"POST",
+	        	url:"alarm/water-pipeline-analysis!deleteRegion.do?model.regionId=" + selected.id,
+	        	success:function(data) {
+	        		$.messager.progress('close');	// hide progress bar while the form is invalid
+	        		var data=eval("("+data+")");
+					if(data.success) {
+						$("#regionTbl").treegrid("reload");
+						$.messager.show({
+							title:'提示',
+							msg:data.msg,
+							timeout:5000
+					    });
+					}
+	        	}
+	        });
+	    }
+    }
+
+   /**
+    *
+    *修改分区
+    **/
+   function beginModifyRegion() {
+	   $("#optType").val(1);
+	   $("#labelBtn").html("修改");
+	   //查找选择的分区信息
+	   var seledtedRegion = $("#regionTbl").treegrid("getSelected");
+	   $.ajax({
+		   type:"GET",
+		   url:"alarm/water-pipeline-analysis!beginModifyRegion.do?model.regionId=" + seledtedRegion.id + "&time=" + new Date(),
+		   success:function(data) {
+				regionDlgIndex = $.layer({
+					type : 1,
+					offset : [ '100px', '' ],
+					shade : [ '', '', false ],
+					area : [ 'auto', 'auto' ],
+					page : {
+						dom : '#createRegionDlg'
+					}
+				});
+			   
+			    //取出分区信息
+			    var data=eval("("+data+")");
+			    var regionId = data.id;
+			    var regionName = data.regionName;
+			    var regionArea = data.regionArea;
+			    var parentId = data._parentId;    
+			    var parentName = data.parentName;  
+			    var deviceIdArray = [];
+			    if(data.deviceIds != null) {
+			    	deviceIdArray = data.deviceIds.split("-");
+			    }
+			    //alert("deviceIdArray: " + deviceIdArray);
+			    $("#choiceDeviceTbl").datagrid({
+			    	url:"alarm/water-pipeline-analysis!queryNoRegionDevice.do?model.regionId=" + regionId,
+			    	onLoadSuccess:function(data) {
+			    		var curPageRows = $("#choiceDeviceTbl").datagrid("getRows");
+						for(var i = 0;i < deviceIdArray.length; i ++) {
+							for(var j = 0;j < curPageRows.length; j++) {
+								var tmpRow = curPageRows[j];
+								//var deviceId = parseInt
+								if(tmpRow.id == parseInt(deviceIdArray[i])) {
+									//alert("tmpRow.id: " + tmpRow.id + "--- deviceIdArray[i]" + deviceIdArray[i]);
+									$("#choiceDeviceTbl").datagrid("selectRow", j);
+									break;
+								}
+							}
+						}
+			    	}});
+			    
+				$("#regionName").val(regionName);
+				$("#regionArea").val(regionArea);
+				$("#parentRegionId").val(parentId);
+				$("#choiceName").html(parentName);
+				$("#regionId").val(regionId);
+		   }
+	   });
+   }
+   
+   function queryRegion() {
+	   var queryKey = $("#queryRegionName").val();
+	  // $("#regionTbl").datagrid({url:"alarm/water-pipeline-analysis!queryRegion.do?model.regionName=" + queryKey});
+	   $.post("alarm/water-pipeline-analysis!queryRegion.do", {"model.regionName":queryKey}, function(result) {
+		   $("#regionTbl").treegrid("loadData", result);
+	   }, "json");
+	   parent.layer.close(queryRegionDlgIndex);
+   }
+   
+   function popRegionQueryDialog() {
+	   queryRegionDlgIndex = $.layer({
+			type : 1,
+			offset : [ '100px', '' ],
+			shade : [ '', '', false ],
+			area : [ 'auto', 'auto' ],
+			page : {
+				dom : '#queryRegionDlg'
+			}
+		});
+	   $("#queryRegionName").val('');
+   }
+   
+</script>
+</html>
