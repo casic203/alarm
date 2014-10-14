@@ -15,6 +15,10 @@
 	<link rel="stylesheet" type="text/css" href="${ctx}/css/index.css" />
 	
 	<script src="${ctx}/s/jquery-easyui-1.3.2/jquery-1.8.0.min.js" type="text/javascript"></script>
+	<script src="${ctx}/s/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
+
+
+	
 	<%-- 对于三维控件接口的调用 --%>
 	<%--  
     <script src="${ctx}/s/gis/scripts/GlobeControl.js" type="text/javascript"></script> 
@@ -28,6 +32,9 @@
 	<script src="${ctx}/s/jquery-easyui-1.3.2/jquery.easyui.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/s/jquery-easyui-1.3.2/locale/easyui-lang-zh_CN.js"></script>
 	<script type="text/javascript" src="${ctx}/s/scroll/scroll.js"></script>
+	<!-- 在线报警相关 -->
+	<script src="${ctx}/s/myScroll/alarmScroll.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${ctx}/s/myScroll/alarmOnlineDisplay.css" />
 </head>
 <body>
 	<div class="easyui-layout" id="sys-content" style="width: 100%; height: 100%;" fit="true">
@@ -63,8 +70,9 @@
     <script src="${ctx}/s/print/jquery.jqprint-0.3.js" type="text/javascript"></script>
   	--%>
   	<script src="${ctx}/s/comet4j/comet4j.js" ></script>
-  	<script type="text/javascript" src="${ctx}/s/alarm/globeFeatureManager.js"></script>
 	<script type="text/javascript" src="${ctx}/s/alarm/index.js"></script>
+	<script type="text/javascript" src="${ctx}/s/alarm/globeFeatureManager.js"></script>
+	
 	<script type="text/javascript" src="${ctx}/s/alarm/region-manage.js"></script>
 	<script type="text/javascript" src="${ctx}/s/alarm/alarm-record-export.js"></script>
 	<script type="text/javascript" src="${ctx}/s/alarm/work-sheet-feedback.js"></script>
@@ -78,4 +86,3 @@
     <script type="text/javascript" src="${ctx}/s/alarm/pipeline-analysis.js"></script>
     <script type="text/javascript" src="${ctx}/s/alarm/xt-gas.js" ></script>
     <script type="text/javascript" src="${ctx}/s/alarm/water-pipe.js" ></script>
-

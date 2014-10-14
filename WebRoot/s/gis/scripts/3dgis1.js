@@ -84,10 +84,10 @@ function connectSqlserver() {
 	//ds = myGlobalCtrl.Globe.DataManager.OpenSqlServerDataSource(server, "",
 	//		"casic_pipe_test", "sa", "acmenu1990");
 
-	//ds = myGlobalCtrl.Globe.DataManager.OpenSqlServerDataSource(server, "",	"sz_taihu_base", "sa", "predator");
+	ds = myGlobalCtrl.Globe.DataManager.OpenSqlServerDataSource(server, "",	"sz_taihu_base", "sa", "predator");
 	
 	//ds=myGlobalCtrl.Globe.DataManager.OpenOracleDataSource("192.168.10.123/orcl","","","scott","predator")
-	ds=myGlobalCtrl.Globe.DataManager.OpenOracleDataSource("192.168.10.123/pipeline","","","scott","predator");
+	//ds=myGlobalCtrl.Globe.DataManager.OpenOracleDataSource("127.0.0.1/sz_taihu_base","","","sa","predator");
 	myGlobalCtrl.refresh();
 	if(null!=ds){
 		for ( var i = 0; i < ds.Count; i++) {
@@ -1279,6 +1279,31 @@ function flyToFiberGPSLocationFromDistance(deviceName, distance) {
 		}
 	}
 }
+
+function flyToFiberByGPS(latitude, longitude){
+
+var pntPosition = new ActiveXObject(
+								"LOCASPACEPLUGIN.GSAPoint3d");
+						pntPosition.X = latitude;
+						pntPosition.Y = longitude;
+						pntPosition.Z = 10;
+
+		// 绘制园
+		var lineLength = 5;
+		var line = myGlobalCtrl.CreateGeoPolyline3D();
+		var part = myGlobalCtrl.CreatePoint3ds();
+		part.Add2(pntPosition);
+		pntPosition.X += 0.000000001;
+		part.Add2(pntPosition);
+		line.AddPart(part);
+		var polygon = line.CreateBuffer(lineLength * 2, true,
+				5, true, false);
+		var feature2 = myGlobalCtrl.CreateFeature();
+		feature2.Geometry = polygon;
+		myGlobalCtrl.Globe.MemoryLayer.AddFeature(feature2);
+		myGlobalCtrl.Globe.FlyToPosition(pntPosition, 1);
+}
+
 
 function huomiao(emitterFeature) {
 	if (emitterFeature != null && emitterFeature.Geometry != null) {

@@ -1,0 +1,45 @@
+<script id="alarmTemplate" type="text/x-jquery-tmpl">
+		<li>
+			<table  class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'propName',width:99"></th>
+						<th data-options="field:'propValue',width:250"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>设备类型 </td>
+						<td>${deviceType}</td>
+					</tr>
+					<tr>
+						<td>事故原因 </td>
+						<td>${message}</td>
+					</tr>
+					<tr>
+						<td>负责人 </td>
+						<td>${dealPerson}</td>
+					</tr>
+					<tr>
+						<td>事故状态 </td>
+						<td>${messageStatus}</td>
+					</tr>
+				</tbody>
+			·</table>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-back'" style="float:right" onclick="jumpToAlarm(${deviceId},$(deviceType))">飞到报警处</a>
+		</li>
+	</script>
+	
+	<script type="text/x-jquery-tmpl" id="testTemplate">
+     <li>${Age}</li>
+     <li>${Name}</li>
+	</script>
+	
+	
+	<div id="alarmPopDlg">
+		<div id="conn">
+			<ul id="alarmList">
+				
+			</ul>
+		</div>
+	</div>

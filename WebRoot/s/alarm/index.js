@@ -1549,6 +1549,7 @@ function editDevType(srcPath, destPath, devNam) {
 	$("#regionTbl").treegrid("reload");
 }
 
+/* 刘鑫报警信息
 var alarmDialogIndex;
 var alarmCodeMap = new HashMap();
 function scheduleQueryAlarmInfo() {
@@ -1653,6 +1654,13 @@ function jumpToAlarm() {
 	$("#tab_div").tabs("select", 'Home');
 	flyToDeviceLayerByFeatureId($("#current-alarm-device-code").val());
 }
+
+*/
+
+
+
+
+
 
 var changeIndex = 1;
 setInterval(

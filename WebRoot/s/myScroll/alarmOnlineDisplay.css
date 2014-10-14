@@ -1,0 +1,29 @@
+
+ #alarmPopDlg{
+	z-index:1;
+	display:none;
+	font-size:12px;
+ }
+ 
+ #conn{
+ margin:0px 0px 0px 0px;
+ padding:0px 0px 0px 0px;
+ backgroud-color:#fff;
+ overflow:hidden;
+ }
+ 
+#conn ul{ 
+position:abosulte;
+margin:10px;
+top:0;
+left:0;
+padding:0;
+overflow:hidden;
+}
+
+ #conn ul li{
+width:100%;
+border-bottom:1px #ccc dotted;
+padding:20px 0;
+overflow:hidden;
+}

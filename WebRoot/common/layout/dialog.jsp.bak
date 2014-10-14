@@ -228,7 +228,6 @@
 	    <input type="hidden" id="current-alarm-device-code"/>
 	</div>
 -->
-<!--
 	<script id="alarmTemplate" type="text/x-jquery-tmpl">
 		<li>
 			<table  class="easyui-datagrid">
@@ -260,30 +259,17 @@
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-back'" style="float:right" onclick="jumpToAlarm(${deviceId},$(deviceType))">飞到报警处</a>
 		</li>
 	</script>
-	-->
-
+	
+	<script type="text/x-jquery-tmpl" id="testTemplate">
+     <li>${Age}</li>
+     <li>${Name}</li>
+	</script>
+	
+	
 	<div id="alarmPopDlg">
 		<div id="conn">
 			<ul id="alarmList">
-			    <!--  
-				<li>
-				   <table class="easyui-datagrid" id="alarmDatagrid" data-options="width:268, height:90">
-				       <thead>
-				          <tr>
-						      <th data-options="field:'propName',width:99"></th>
-						      <th data-options="field:'propValue',width:99">bbb</th>
-					      </tr>
-				       </thead>
-				       <tbody>
-				          <tr>
-					          <td>aa</td>
-					          <td>bb</td>
-					      </tr>
-				      </tbody>
-			       </table>
-			       <a class="easyui-linkbutton" href="#" style="float:right" onclick="jumpToAlarm()">飞到设备</a>
-			    </li>
-			    -->
+				
 			</ul>
 		</div>
 	</div>

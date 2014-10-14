@@ -59,15 +59,17 @@
 	</bean>
 	
 	<!-- add trigger list -->
+	<!--  
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="autoStartup" value="${quartz.autostartup}"/>
 		<property name="quartzProperties" ref="applicationProperties"/>
 		<property name="triggers">
 			<list>
-				<!--<ref bean="mailCronTrigger" /> -->
+				<ref bean="mailCronTrigger" />
 				<ref bean="warnInfoCronTrigger"/>
 			</list>
 		</property>
 	</bean>
+	-->
 
 </beans>

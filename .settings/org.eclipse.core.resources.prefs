@@ -1,9 +1,9 @@
 eclipse.preferences.version=1
+encoding//WebRoot/common/layout/dialog.html=UTF-8
 encoding//WebRoot/common/layout/header.jsp=UTF-8
 encoding//WebRoot/common/layout/viewDeviceData.jsp=UTF-8
 encoding//WebRoot/content/alarm/add-alarm-record.jsp=UTF-8
 encoding//WebRoot/content/alarm/device-type.jsp=UTF-8
-encoding//WebRoot/index.jsp.bak=UTF-8
 encoding//WebRoot/s/gis/scripts/GlobeControl.js=UTF-8
 encoding//src/com/casic/alarm/web/alarm/AcceptPersonAction.java=UTF-8
 encoding//src/com/casic/core/hibernate/PropertyFilter.java=UTF-8
